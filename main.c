@@ -10,7 +10,7 @@ typedef struct free_stack
 
 freestack frees;
 
-void push_free(freestack *frees, void *ptr)
+void push_free(freestack *frees, const void *ptr)
 {
     if (frees->frees_idx >= frees->frees_max)
     {
@@ -25,20 +25,20 @@ typedef struct matrix
     int h;
     int w;
     float *data;
-    float *(*idxfn)(struct matrix *mtrx, int i, int j);
+    float *(*idxfn)(const struct matrix *mtrx, const int i, const int j);
 } mat;
 
-float *idx_mat(mat *mtrx, int i, int j)
+float *idx_mat(const mat *mtrx, const int i, const int j)
 {
     return &mtrx->data[i * mtrx->w + j];
 }
 
-float *idx_mat_t(mat *mtrx, int i, int j)
+float *idx_mat_t(const mat *mtrx, const int i, const int j)
 {
     return &mtrx->data[j * mtrx->h + i];
 }
 
-mat *init_mat(int h, int w)
+mat *init_mat(const int h, const int w)
 {
     mat *new = (mat *)malloc(sizeof(mat));
     if (!new)
@@ -62,7 +62,7 @@ mat *init_mat(int h, int w)
     return new;
 }
 
-mat *tr(mat *mtrx)
+mat *tr(const mat *mtrx)
 {
     mat *new = malloc(sizeof(mat));
     if (!new)
@@ -77,7 +77,7 @@ mat *tr(mat *mtrx)
     return new;
 }
 
-mat *mm(mat *a, mat *b)
+mat *mm(const mat *a, const mat *b)
 {
     if (a->w != b->h)
         return NULL;
@@ -100,7 +100,7 @@ mat *mm(mat *a, mat *b)
     return c;
 }
 
-void pprint(mat *mtrx)
+void pprint(const mat *mtrx)
 {
     for (int i = 0; i < mtrx->h; i++)
     {
