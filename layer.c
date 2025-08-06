@@ -1,10 +1,13 @@
-#include "nn.h"
+#include "layer.h"
 #include "matfns.h"
+#include <math.h>
 #include <stdlib.h>
+#include "mtrx.h"
 
 layer init_layer(int in, int out, void (*actfn)(float*)) {
-    mat* weights = init_mat(out, in);
-    mat* bias = init_mat(out, 1);
+    float stddev = sqrt(2.0 / in);
+    mat* weights = init_mat_random(out, in, 0.0, stddev);
+    mat* bias = init_mat(out, 1); 
     if (!weights || !bias) {
         layer ret = {0};
         return ret;
@@ -14,6 +17,10 @@ layer init_layer(int in, int out, void (*actfn)(float*)) {
 }
 
 mat* forward(layer l, mat* input) {
+    if (!input || !l.weights || !l.bias) {
+        return NULL;
+    }
+    
     mat* result = mm(l.weights, input);
     if (!result) {
         return NULL;
@@ -22,7 +29,9 @@ mat* forward(layer l, mat* input) {
         return NULL;
     }
     mtrx_elemwise_ip(result, l.bias, add_ip);
-    mtrx_elemwise_ip_unary(result, l.actfn);
+    if (l.actfn) {
+        mtrx_elemwise_ip_unary(result, l.actfn);
+    }
     return result;
 }
 

@@ -12,6 +12,8 @@ float* idx_mat_t(const mat*, const int, const int);
 
 mat* init_mat(const int, const int);
 
+mat* init_mat_random(const int, const int, float, float);
+
 mat* tr(const mat*);
 
 mat* mtrx_elemwise(mat*, mat*, float (*)(float*, float*));

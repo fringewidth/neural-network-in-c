@@ -1,13 +1,12 @@
 #include "memman.h"
-#include "mtrx.h"
-#include "nn.h"
+#include "layer.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
 freestack frees;
 
-int main(void) {
+int main() {
     srand((unsigned)time(NULL));
 
     frees.frees_idx = 0;

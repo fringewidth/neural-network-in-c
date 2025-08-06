@@ -4,8 +4,11 @@
 void push_free(freestack* frees, void* ptr) {
     if (frees->frees_idx >= frees->frees_max) {
         frees->frees_max *= 2;
-        frees->freebuf =
-            realloc(frees->freebuf, frees->frees_max * sizeof(void*));
+        void* new_buf = realloc(frees->freebuf, frees->frees_max * sizeof(void*));
+        if (!new_buf) {
+            return;
+        }
+        frees->freebuf = new_buf;
     }
     frees->freebuf[frees->frees_idx++] = ptr;
 }

@@ -1,5 +1,3 @@
 #pragma once
 
-static double runiform();
-
-double rnormal(double, double);
+float rnormal(float, float);
