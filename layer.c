@@ -4,9 +4,9 @@
 #include <stdlib.h>
 #include "mtrx.h"
 
-layer init_layer(int in, int out, void (*actfn)(float*)) {
-    float stddev = sqrt(2.0 / in);
-    mat* weights = init_mat_random(out, in, 0.0, stddev);
+layer init_layer(const int in, const int out, void (*actfn)(float*)) {
+    float std = sqrt(2.0 / in);
+    mat* weights = init_mat_random(out, in, 0.0, std);
     mat* bias = init_mat(out, 1); 
     if (!weights || !bias) {
         layer ret = {0};
@@ -16,7 +16,7 @@ layer init_layer(int in, int out, void (*actfn)(float*)) {
     return ret;
 }
 
-mat* forward(layer l, mat* input) {
+mat* forward(const layer l, mat* input) {
     if (!input || !l.weights || !l.bias) {
         return NULL;
     }

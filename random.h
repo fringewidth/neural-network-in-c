@@ -1,3 +1,3 @@
 #pragma once
 
-float rnormal(float, float);
+float rnormal(const float mean, const float std);

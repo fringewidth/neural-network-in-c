@@ -9,6 +9,6 @@ typedef struct nn_layer {
     void (*actfn)(float*);
 } layer;
 
-layer init_layer(int, int, void (*)(float*));
-mat* forward(layer, mat*);
-void relu(float*);
+layer init_layer(const int in, const int out, void (*actfn)(float*));
+mat* forward(const layer l, mat* input);
+void relu(float* x);
