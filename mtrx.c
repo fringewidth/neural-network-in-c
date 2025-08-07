@@ -32,11 +32,19 @@ float* idx_bdcst_w(const mat* mtrx, const int i, const int j) {
     return &mtrx->data[i];
 }
 
+float* idx_bdcst_scalar(const mat* mtrx, const int i, const int j) {
+    (void)i;
+    (void)j;
+    if (!mtrx || !mtrx->data) return NULL;
+    return &mtrx->data[0];
+}
+
 idx_fn_ptr tmap(idx_fn_ptr fn) {
     if(fn == idx_mat) return idx_mat_t;
     if(fn == idx_mat_t) return idx_mat;
     if(fn == idx_bdcst_h) return idx_bdcst_w;
     if(fn == idx_bdcst_w) return idx_bdcst_h;
+    // if(fn == idx_bdcst_scalar) return idx_bdcst_scalar;
     return fn;
 }
 
@@ -55,7 +63,7 @@ mat* init_mat(const int h, const int w) {
     }
     push_free(&frees, new->data);
     for (int i = 0; i < h * w; i++) {
-        new->data[i] = 1.0f;
+        new->data[i] = 0.0f;
     }
     return new;
 }
@@ -118,7 +126,11 @@ struct operands broadcast(struct operands opnds) {
     if (!a || !b) return opnds;
 
     if (a->h == b->h && a->w == b->w) return opnds;
-
+    if (a->h == 1 && a->w == 1) {
+        mat* view = make_view(a, b->h, b->w, idx_bdcst_scalar);
+        if (view) opnds.a = view;
+        return opnds;
+    }
 
     if (a->h == b->h && a->w == 1) {
         mat* view = make_view(a, a->h, b->w, idx_bdcst_w);
@@ -182,7 +194,7 @@ void mtrx_elemwise_ip(mat* a, mat* b, void (*op)(float*, const float*)) {
     struct operands opnds = {a, b};
     opnds = broadcast_ip(opnds);
     b = opnds.b;
-    if (a->h != b->h && a->w != b->w) return;
+    if (a->h != b->h || a->w != b->w) return;
     for (int i = 0; i < a->h; i++) {
         for (int j = 0; j < a->w; j++) {
             float* a_val = a->idxfn(a, i, j);
