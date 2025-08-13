@@ -33,7 +33,7 @@ float* idx_bdcst_w(const mat* mtrx, const int i, const int j) {
 }
 
 float* idx_bdcst_scalar(const mat* mtrx, const int i, const int j) {
-    (void)i;
+    (void)i;    
     (void)j;
     if (!mtrx || !mtrx->data) return NULL;
     return &mtrx->data[0];
@@ -86,6 +86,25 @@ mat* init_mat_random(const int h, const int w, float mean, float std) {
         new->data[i] = (float)rnormal(mean, std);
     }
     return new;
+}
+
+mat* init_mat_scalar(const float val) {
+    mat* out = init_mat(1, 1);
+    if (out && out->data) {
+        out->data[0] = val;
+        return out;
+    }
+    return NULL;
+}
+
+mat* init_mat_ones(const int h, const int w) {
+    mat* out = init_mat(h, w);
+    if (out && out->data) {
+        for (int i = 0; i < h * w; i++) {
+            out->data[i] = 1.0f;
+        }
+    }
+    return out;
 }
 
 mat* tr(const mat* mtrx) {
@@ -183,6 +202,22 @@ mat* mtrx_elemwise(mat* a, mat* b, float (*op)(const float*, const float*)) {
             float* c_val = c->idxfn(c, i, j);
             if (a_val && b_val && c_val) {
                 *c_val = op(a_val, b_val);
+            }
+        }
+    }
+    return c;
+}
+
+mat* mtrx_elemwise_unary(mat* a, float (*op)(const float*)) {
+    if (!a || !op) return NULL;
+    mat* c = init_mat(a->h, a->w);
+    if (!c) return NULL;
+    for (int i = 0; i < a->h; i++) {
+        for (int j = 0; j < a->w; j++) {
+            float* a_val = a->idxfn(a, i, j);
+            float* c_val = c->idxfn(c, i, j);
+            if (a_val && c_val) {
+                *c_val = op(a_val);
             }
         }
     }

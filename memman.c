@@ -20,3 +20,17 @@ void free_them_all() {
     }
     free(frees.freebuf);
 }
+
+void free_now(void* ptr) {
+    if (!ptr) return;
+    for (int i = frees.frees_idx - 1; i >= 0; i--) {
+        if (frees.freebuf[i] == ptr) {
+            for (int j = i; j < frees.frees_idx - 1; j++) {
+                frees.freebuf[j] = frees.freebuf[j + 1];
+            }
+            frees.frees_idx--;
+            break;
+        }
+    }
+    free(ptr);
+}

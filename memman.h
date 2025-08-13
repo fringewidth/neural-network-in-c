@@ -17,3 +17,5 @@ extern freestack frees;
 void push_free(freestack* frees, void* ptr);
 
 void free_them_all();
+
+void free_now(void* ptr);

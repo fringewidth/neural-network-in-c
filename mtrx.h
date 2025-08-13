@@ -16,9 +16,15 @@ mat* init_mat(const int h, const int w);
 
 mat* init_mat_random(const int h, const int w, float mean, float std);
 
+mat* init_mat_scalar(const float val);
+
+mat* init_mat_ones(const int h, const int w);
+
 mat* tr(const mat* mtrx);
 
 mat* mtrx_elemwise(mat* a, mat* b, float (*op)(const float*, const float*));
+
+mat* mtrx_elemwise_unary(mat* a, float (*op)(const float*));
 
 void mtrx_elemwise_ip(mat* a, mat* b, void (*op)(float*, const float*));
 

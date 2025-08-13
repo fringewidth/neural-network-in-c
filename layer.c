@@ -36,6 +36,14 @@ mat* forward(const layer l, mat* input) {
 }
 
 void relu(float* x) {
-    if (*x < 0)
-        *x = 0;
+    if (!x) return;
+    if (*x < 0) *x = 0;
+}
+
+float relu_value(const float* a) {
+    return (a && *a > 0) ? *a : 0.0f;
+}
+
+float relu_grad_value(const float* a) {
+    return (a && *a > 0) ? 1.0f : 0.0f;
 }
